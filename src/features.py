@@ -3,6 +3,12 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
 
+
+def CreateFeatureMatrix(df: pd.DataFrame) -> pd.DataFrame:
+    cat_features = pd.get_dummies(df[["category", "glass", "alcoholic"]], drop_first=True)
+    numeric_cols = df.select_dtypes(include=["int", "float", "bool"]).columns
+    df_features = df[numeric_cols].copy()
+    return df_features
 def ExtractIngredientMatrix(df: pd.DataFrame) -> pd.DataFrame:
 
     all_ingredients = set()

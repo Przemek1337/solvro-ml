@@ -19,7 +19,7 @@ def KMEANS(features: pd.DataFrame, n_clusters: int = 5) -> Tuple[np.ndarray, Any
            Tuple: (cluster_labels, model)
        """
     kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
-    labels = kmeans.fit(features)
+    labels = kmeans.fit_predict(features)
 
     return labels, kmeans
 
@@ -37,7 +37,7 @@ def AC(features: pd.DataFrame, n_clusters: int = 5) -> Tuple[np.ndarray, Any]:
     ac = AgglomerativeClustering(n_clusters=n_clusters)
     labels = ac.fit_predict(features)
     return labels, ac
-def DBSCAN(features: pd.DataFrame, eps: float = 0.5, min_samples: int = 5) -> Tuple[np.ndarray, Any]:
+def ApplyDBSCAN(features: pd.DataFrame, eps: float = 1.0, min_samples: int = 5) -> Tuple[np.ndarray, Any]:
     """
        Apply DBSCAN clustering to feature matrix.
 
@@ -51,6 +51,22 @@ def DBSCAN(features: pd.DataFrame, eps: float = 0.5, min_samples: int = 5) -> Tu
        """
     ds = DBSCAN(eps=eps, min_samples=min_samples)
     labels = ds.fit_predict(features)
+    if -1 in labels:
+        noise_points = features[labels == -1]
+        if len(noise_points) > 0 and len(set(labels)) > 1:  # Upewnij się, że istnieją klastry
+            from sklearn.metrics import pairwise_distances_argmin_min
+
+            # Znajdź punkty, które nie są szumem
+            non_noise_points = features[labels != -1]
+            non_noise_labels = labels[labels != -1]
+
+            # Dla każdego punktu szumu, znajdź najbliższy klaster
+            closest_indices, _ = pairwise_distances_argmin_min(noise_points, non_noise_points)
+            closest_labels = non_noise_labels[closest_indices]
+
+            # Przypisz punkty szumowe do najbliższych klastrów
+            labels[labels == -1] = closest_labels
+
     return labels, ds
 def FindOptimalK(features: pd.DataFrame, max_k: int = 15) -> int:
     """

@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
-
+from typing import Dict, List, Optional
+import numpy as np
 def LoadDataset(file_path: str) -> pd.DataFrame:
     """
         Load cocktail data from JSON file.
@@ -27,8 +28,19 @@ def CleanData(df: pd.DataFrame) -> pd.DataFrame:
     return cleaned_df
 
 def ExtractIngriedientsFeatures(df: pd.DataFrame) -> pd.DataFrame:
-    mlb = MultiLabelBinarizer()
-    ingredients_matrix = mlb.fit_transform(df['ingredients'])
-    ingredients_encoded = pd.DataFrame(ingredients_matrix, columns=[f'has_{ing}' for ing in mlb.classes_])
-    df = df.drop(columns=['ingredients']).join(ingredients_encoded)
-    return df
+    all_ingredient_names = set()
+    for ingredients_list in df['ingredients']:
+        for ingredient in ingredients_list:
+            all_ingredient_names.add(ingredient['name'])
+    ingredient_features = {f'has_{name}': [] for name in all_ingredient_names}
+
+    for _, row in df.iterrows():
+        current_ingredients = {ingredient['name'] for ingredient in row['ingredients']}
+        for name in all_ingredient_names:
+            ingredient_features[f'has_{name}'].append(1 if name in current_ingredients else 0)
+
+    ingredients_df = pd.DataFrame(ingredient_features)
+
+    result_df = pd.concat([df.drop(columns=['ingredients']), ingredients_df], axis=1)
+
+    return result_df
