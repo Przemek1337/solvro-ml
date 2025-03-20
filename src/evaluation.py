@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
-from typing import Dict, List, Any
+from typing import Dict
 
 def EvaluateClusters(features: pd.DataFrame, labels: np.ndarray) -> Dict[str, float]:
     """
@@ -75,6 +75,3 @@ def AnalyzeClusters(df: pd.DataFrame, labels: np.ndarray) -> pd.DataFrame:
         cluster_summary.append(cluster_info)
 
     return pd.DataFrame(cluster_summary)
-
-
-

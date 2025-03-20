@@ -4,9 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
-# from umap import UMAP
-from typing import Tuple
-
 
 def PlotClusters2D(features: pd.DataFrame, labels: np.ndarray, title: str = "Cluster Visualization"):
     """
@@ -31,7 +28,6 @@ def PlotClusters2D(features: pd.DataFrame, labels: np.ndarray, title: str = "Clu
     plt.legend(title="Cluster")
     plt.show()
 
-
 def PlotTSNE(features: pd.DataFrame, labels: np.ndarray):
     """
         Plots 2D clusters using t-SNE for dimensionality reduction.
@@ -53,20 +49,6 @@ def PlotTSNE(features: pd.DataFrame, labels: np.ndarray):
     plt.ylabel("t-SNE Component 2")
     plt.legend(title="Cluster")
     plt.show()
-
-
-# def PlotUMAP(features: pd.DataFrame, labels: np.ndarray):
-#     reducer = umap(n_components=2, random_state=42)
-#     reduced_features = reducer.fit_transform(features)
-#
-#     plt.figure(figsize=(10, 6))
-#     sns.scatterplot(x=reduced_features[:, 0], y=reduced_features[:, 1], hue=labels, palette="viridis", alpha=0.7)
-#     plt.title("UMAP Cluster Visualization")
-#     plt.xlabel("UMAP Component 1")
-#     plt.ylabel("UMAP Component 2")
-#     plt.legend(title="Cluster")
-#     plt.show()
-
 
 def PlotClusterDistribution(labels: np.ndarray):
     """

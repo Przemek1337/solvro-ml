@@ -1,12 +1,11 @@
-from typing import Tuple, Any, Dict
-
+from typing import Tuple, Any
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score
-import umap
+
 def KMEANS(features: pd.DataFrame, n_clusters: int = 5) -> Tuple[np.ndarray, Any]:
     """
        Apply K-means clustering to feature matrix.
@@ -37,6 +36,7 @@ def AC(features: pd.DataFrame, n_clusters: int = 5) -> Tuple[np.ndarray, Any]:
     ac = AgglomerativeClustering(n_clusters=n_clusters)
     labels = ac.fit_predict(features)
     return labels, ac
+
 def ApplyDBSCAN(features: pd.DataFrame, eps: float = 1.0, min_samples: int = 5) -> Tuple[np.ndarray, Any]:
     """
        Apply DBSCAN clustering to feature matrix.
@@ -65,6 +65,7 @@ def ApplyDBSCAN(features: pd.DataFrame, eps: float = 1.0, min_samples: int = 5) 
             labels[labels == -1] = closest_labels
 
     return labels, ds
+
 def FindOptimalK(features: pd.DataFrame, max_k: int = 15) -> int:
     """
        Find optimal number of clusters using the elbow method.
@@ -76,6 +77,7 @@ def FindOptimalK(features: pd.DataFrame, max_k: int = 15) -> int:
        Returns:
            int: Optimal number of clusters
        """
+
     silhoette_scores = []
     inertia_values = []
 
@@ -108,12 +110,7 @@ def ReduceDimensions(features: pd.DataFrame, method: str = 'pca', n_components: 
     elif method == 'tsne':
         reducer = TSNE(n_components=n_components, random_state=42)
         reduced_features = reducer.fit_transform(features)
-    elif method == 'umap':
-        reducer = umap.UMAP(n_components=n_components, random_state=42)
-        reduced_features = reducer.fit_transform(features)
     else:
         raise ValueError('Invalid dimension reduction method')
 
     return reduced_features
-
-
