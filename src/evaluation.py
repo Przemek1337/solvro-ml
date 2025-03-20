@@ -4,6 +4,16 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_har
 from typing import Dict, List, Any
 
 def EvaluateClusters(features: pd.DataFrame, labels: np.ndarray) -> Dict[str, float]:
+    """
+    Evaluate clustering results using internal metrics.
+
+    Args:
+        features: Scaled feature matrix
+        labels: Cluster labels
+
+    Returns:
+        Dict: Dictionary with evaluation metrics
+    """
     unique_labels = np.unique(labels)
     if len(unique_labels) <= 1 or len(unique_labels) >= len(features) - 1:
         return {'error': 'Invalid number of clusters for evaluation'}
@@ -17,6 +27,16 @@ def EvaluateClusters(features: pd.DataFrame, labels: np.ndarray) -> Dict[str, fl
     return metrics
 
 def AnalyzeClusters(df: pd.DataFrame, labels: np.ndarray) -> pd.DataFrame:
+    """
+    Analyze the composition of clusters.
+
+    Args:
+        df: Original cocktail DataFrame
+        labels: Cluster labels
+
+    Returns:
+        pd.DataFrame: Summary of cluster characteristics
+    """
     df_with_clusters = df.copy()
     df_with_clusters['cluster'] = labels
     clusters = np.unique(labels)

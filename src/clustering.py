@@ -53,18 +53,15 @@ def ApplyDBSCAN(features: pd.DataFrame, eps: float = 1.0, min_samples: int = 5) 
     labels = ds.fit_predict(features)
     if -1 in labels:
         noise_points = features[labels == -1]
-        if len(noise_points) > 0 and len(set(labels)) > 1:  # Upewnij się, że istnieją klastry
+        if len(noise_points) > 0 and len(set(labels)) > 1:
             from sklearn.metrics import pairwise_distances_argmin_min
 
-            # Znajdź punkty, które nie są szumem
             non_noise_points = features[labels != -1]
             non_noise_labels = labels[labels != -1]
 
-            # Dla każdego punktu szumu, znajdź najbliższy klaster
             closest_indices, _ = pairwise_distances_argmin_min(noise_points, non_noise_points)
             closest_labels = non_noise_labels[closest_indices]
 
-            # Przypisz punkty szumowe do najbliższych klastrów
             labels[labels == -1] = closest_labels
 
     return labels, ds

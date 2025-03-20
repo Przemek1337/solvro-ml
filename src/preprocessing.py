@@ -28,6 +28,15 @@ def CleanData(df: pd.DataFrame) -> pd.DataFrame:
     return cleaned_df
 
 def ExtractIngriedientsFeatures(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Extract features from the ingredients column.
+
+    Args:
+        df: DataFrame with cocktail data
+
+    Returns:
+        pd.DataFrame: DataFrame with extracted ingredient features
+    """
     all_ingredient_names = set()
     for ingredients_list in df['ingredients']:
         for ingredient in ingredients_list:

@@ -5,11 +5,29 @@ from sklearn.preprocessing import StandardScaler
 
 
 def CreateFeatureMatrix(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create a feature matrix from cocktail data suitable for clustering.
+
+    Args:
+        df: Cleaned cocktail DataFrame
+
+    Returns:
+        pd.DataFrame: Feature matrix for clustering
+    """
     cat_features = pd.get_dummies(df[["category", "glass", "alcoholic"]], drop_first=True)
     numeric_cols = df.select_dtypes(include=["int", "float", "bool"]).columns
     df_features = df[numeric_cols].copy()
     return df_features
 def ExtractIngredientMatrix(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create a binary matrix of ingredients from ingredients column.
+
+    Args:
+        df: DataFrame with ingredients column
+
+    Returns:
+        pd.DataFrame: Binary matrix where rows are cocktails and columns are ingredients
+    """
 
     all_ingredients = set()
 
@@ -30,6 +48,15 @@ def ExtractIngredientMatrix(df: pd.DataFrame) -> pd.DataFrame:
     return ingredient_matrix
 
 def ScaleFeatures(features: pd.DataFrame) -> pd.DataFrame:
+    """
+    Scale features using StandardScaler.
+
+    Args:
+        features: Feature matrix
+
+    Returns:
+        pd.DataFrame: Scaled feature matrix
+    """
     scaler = StandardScaler()
     scaled_features = pd.DataFrame(
         scaler.fit_transform(features),
